@@ -14,7 +14,7 @@ const About = () => {
             Building with <span className="text-ujenzi-accent">Purpose.</span>
           </h2>
           <p className="text-slate-600 text-sm lg:text-lg leading-relaxed px-2">
-            Ujenzi Tips is a digital media company revolutionizing the Tanzanian construction sector. We bridge the gap between complex engineering and the everyday builder.
+            Ujenzi Tips is a digital media company revolutionizing the Tanzanian construction sector.
           </p>
         </div>
 
@@ -49,7 +49,6 @@ const About = () => {
             { icon: Users, title: "Community", desc: "Building together." }
           ].map((value, index) => (
             <div key={index} className="p-4 lg:p-6 bg-white border border-slate-100 rounded-xl hover:border-ujenzi-accent/30 text-center group shadow-sm transition-all">
-              {/* FIXED LINE BELOW: Added 'group-hover:' to avoid conflict */}
               <div className="w-10 h-10 lg:w-12 lg:h-12 mx-auto bg-slate-50 group-hover:bg-ujenzi-accent/10 rounded-full flex items-center justify-center text-slate-400 group-hover:text-ujenzi-accent transition-colors mb-2 lg:mb-4">
                 <value.icon size={20} />
               </div>

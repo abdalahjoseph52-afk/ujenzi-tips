@@ -22,7 +22,7 @@ const Services = () => {
           </h2>
         </div>
 
-        {/* COMPACT GRID FOR MOBILE */}
+        {/* COMPACT 2-COL GRID */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
           {t.services.list.map((service, index) => {
             const Icon = icons[index];

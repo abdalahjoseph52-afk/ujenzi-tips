@@ -6,44 +6,31 @@ import { useLanguage } from '../hooks/useLanguage';
 const Plans = () => {
   const { t } = useLanguage();
   const [filter, setFilter] = useState('all');
-
-  // SAFETY CHECK: If data hasn't loaded
   const list = t.plans?.list || [];
-
-  const filteredPlans = filter === 'all' 
-    ? list 
-    : list.filter(plan => plan.category === filter);
+  const filteredPlans = filter === 'all' ? list : list.filter(plan => plan.category === filter);
 
   return (
-    <div className="min-h-screen bg-ujenzi-dark text-white flex flex-col">
-      
-      {/* Container with top padding for fixed header */}
-      <div className="flex-grow pt-40 md:pt-48 pb-20 px-6">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      <div className="flex-grow pt-32 lg:pt-48 pb-20 px-5 lg:px-6">
         <div className="max-w-7xl mx-auto">
           
-          {/* Header */}
-          <div className="text-center mb-16 max-w-3xl mx-auto">
+          <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-3 py-1 bg-ujenzi-accent/10 text-ujenzi-accent text-xs font-bold uppercase tracking-widest mb-6 rounded-full">
               <Ruler size={14} /> Architectural Designs
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              {t.plans?.title}
-            </h1>
-            <p className="text-slate-400 text-lg leading-relaxed">
-              {t.plans?.subtitle}
-            </p>
+            <h1 className="text-3xl lg:text-6xl font-bold text-slate-900 mb-4">{t.plans?.title}</h1>
+            <p className="text-slate-500 text-lg">{t.plans?.subtitle}</p>
           </div>
 
-          {/* Filters */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
+          <div className="flex flex-wrap justify-center gap-3 mb-10">
             {t.plans && Object.entries(t.plans.filters).map(([key, label]) => (
               <button
                 key={key}
                 onClick={() => setFilter(key)}
-                className={`px-6 py-2 rounded-full border transition-all duration-300 text-sm font-bold uppercase tracking-wider ${
+                className={`px-5 py-2 rounded-full border transition-all text-xs font-bold uppercase tracking-wide ${
                   filter === key 
-                    ? 'bg-ujenzi-accent border-ujenzi-accent text-ujenzi-dark' 
-                    : 'bg-transparent border-white/10 text-slate-400 hover:border-ujenzi-accent/50 hover:text-white'
+                    ? 'bg-slate-900 text-white border-slate-900' 
+                    : 'bg-white border-slate-200 text-slate-500 hover:border-slate-400'
                 }`}
               >
                 {label}
@@ -51,62 +38,51 @@ const Plans = () => {
             ))}
           </div>
 
-          {/* Plans Grid */}
-          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <AnimatePresence>
               {filteredPlans.map((plan) => (
                 <motion.div
                   layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
                   key={plan.id}
-                  className="bg-ujenzi-card border border-white/5 overflow-hidden group hover:border-ujenzi-accent/30 transition-all duration-300 flex flex-col"
+                  className="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
                 >
-                  {/* Image with Overlay */}
-                  <div className="h-64 md:h-80 relative overflow-hidden">
+                  <div className="h-64 relative overflow-hidden">
                     <img 
                       src={plan.image} 
                       alt={plan.title} 
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-ujenzi-dark/90 via-transparent to-transparent"></div>
-                    
-                    <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
-                      <div>
-                        <span className="bg-ujenzi-accent text-ujenzi-dark text-[10px] font-bold uppercase px-2 py-1 mb-2 inline-block rounded-sm">
-                          {plan.category}
-                        </span>
-                        <h3 className="text-2xl font-bold text-white leading-none">{plan.title}</h3>
-                      </div>
+                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-slate-900 uppercase shadow-sm">
+                      {plan.category}
                     </div>
                   </div>
 
-                  {/* Details */}
-                  <div className="p-6 flex flex-col flex-grow">
-                    <div className="grid grid-cols-2 gap-4 mb-6 border-b border-white/5 pb-6">
-                      <div className="flex items-center gap-2 text-slate-300 text-sm">
-                        <BedDouble size={18} className="text-ujenzi-accent" /> {plan.rooms}
-                      </div>
-                      <div className="flex items-center gap-2 text-slate-300 text-sm">
-                        <Ruler size={18} className="text-ujenzi-accent" /> {plan.area}
-                      </div>
-                      <div className="col-span-2 flex items-center gap-2 text-white font-bold text-sm">
-                        <Wallet size={18} className="text-ujenzi-accent" /> Est. Cost: {plan.cost}
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-xl font-bold text-slate-900">{plan.title}</h3>
+                      <div className="text-right">
+                        <p className="text-[10px] text-slate-400 uppercase font-bold">Est. Cost</p>
+                        <p className="text-sm font-bold text-ujenzi-accent">{plan.cost}</p>
                       </div>
                     </div>
 
-                    <p className="text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
-                      {plan.desc}
-                    </p>
+                    <div className="flex gap-4 mb-6 text-sm text-slate-500 font-medium">
+                      <span className="flex items-center gap-1"><BedDouble size={16} /> {plan.rooms}</span>
+                      <span className="flex items-center gap-1"><Ruler size={16} /> {plan.area}</span>
+                    </div>
+
+                    <p className="text-slate-500 text-sm leading-relaxed mb-6">{plan.desc}</p>
 
                     <a 
-                      href={`https://wa.me/255764533533?text=Hello, I am interested in the house plan: ${plan.title}`}
+                      href={`https://wa.me/255764533533?text=Interested in ${plan.title}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="w-full py-4 bg-white/5 hover:bg-ujenzi-accent hover:text-ujenzi-dark text-white flex items-center justify-center gap-2 font-bold uppercase tracking-widest text-xs transition-colors border border-white/10 group-hover:border-transparent"
+                      className="w-full py-3 bg-slate-900 hover:bg-ujenzi-accent hover:text-slate-900 text-white flex items-center justify-center gap-2 font-bold uppercase tracking-widest text-xs rounded-lg transition-colors"
                     >
-                      <MessageCircle size={16} /> {t.plans?.btn} <ArrowRight size={16} />
+                      <MessageCircle size={16} /> {t.plans?.btn}
                     </a>
                   </div>
                 </motion.div>

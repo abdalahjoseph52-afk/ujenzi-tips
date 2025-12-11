@@ -39,7 +39,7 @@ const Blog = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-8">
             {t.blog.list.map((article, index) => {
               const richArticle = { ...article, ...richData[index] };
               return (
@@ -49,6 +49,7 @@ const Blog = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   onClick={() => setSelectedArticle(richArticle)}
+                  // COMPACT HORIZONTAL LAYOUT
                   className="group flex flex-row gap-4 lg:gap-6 bg-white border border-slate-100 p-3 lg:p-4 rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer items-center"
                 >
                   <div className="w-24 h-24 lg:w-48 lg:h-48 shrink-0 overflow-hidden relative rounded-lg">
@@ -59,16 +60,16 @@ const Blog = () => {
                     />
                   </div>
 
-                  <div className="flex flex-col justify-center py-1">
-                    <div className="flex items-center gap-2 text-[10px] text-slate-400 mb-2 font-bold uppercase">
+                  <div className="flex flex-col justify-center py-1 w-full">
+                    <div className="flex items-center gap-2 text-[10px] text-slate-400 mb-1 font-bold uppercase">
                       <span className="text-ujenzi-accent">{richArticle.category}</span>
                       <span>•</span>
                       <span>{richArticle.readTime}</span>
                     </div>
-                    <h3 className="text-sm lg:text-xl font-bold text-slate-900 mb-2 leading-tight group-hover:text-ujenzi-accent transition-colors line-clamp-2">
+                    <h3 className="text-sm lg:text-xl font-bold text-slate-900 mb-1 leading-tight group-hover:text-ujenzi-accent transition-colors line-clamp-2">
                       {richArticle.title}
                     </h3>
-                    <p className="text-slate-500 text-xs lg:text-sm line-clamp-2 mb-3 hidden lg:block">
+                    <p className="text-slate-500 text-xs lg:text-sm line-clamp-2 mb-2 hidden lg:block">
                       {richArticle.excerpt}
                     </p>
                     
