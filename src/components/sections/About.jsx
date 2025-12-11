@@ -48,8 +48,9 @@ const About = () => {
             { icon: Lightbulb, title: "Innovation", desc: "Tech solutions." },
             { icon: Users, title: "Community", desc: "Building together." }
           ].map((value, index) => (
-            <div key={index} className="p-4 lg:p-6 bg-white border border-slate-100 rounded-xl hover:border-ujenzi-accent/30 text-center shadow-sm">
-              <div className="w-10 h-10 lg:w-12 lg:h-12 mx-auto bg-slate-50 rounded-full flex items-center justify-center text-slate-400 text-ujenzi-accent mb-2 lg:mb-4">
+            <div key={index} className="p-4 lg:p-6 bg-white border border-slate-100 rounded-xl hover:border-ujenzi-accent/30 text-center group shadow-sm transition-all">
+              {/* FIXED LINE BELOW: Added 'group-hover:' to avoid conflict */}
+              <div className="w-10 h-10 lg:w-12 lg:h-12 mx-auto bg-slate-50 group-hover:bg-ujenzi-accent/10 rounded-full flex items-center justify-center text-slate-400 group-hover:text-ujenzi-accent transition-colors mb-2 lg:mb-4">
                 <value.icon size={20} />
               </div>
               <h4 className="text-slate-900 font-bold text-xs lg:text-sm mb-1">{value.title}</h4>
