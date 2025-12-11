@@ -2,33 +2,42 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Play, CheckCircle2 } from 'lucide-react';
 import Button from '../ui/Button';
-import { useLanguage } from '../../hooks/useLanguage'; // <--- IMPORT
+import { useLanguage } from '../../hooks/useLanguage';
 
+// Logos
 import pnyLogo from '../../assets/pny.png';
 import primesiteLogo from '../../assets/primesite.png';
 import siteexploreLogo from '../../assets/siteexplore.png';
 
 const Hero = () => {
-  const { t } = useLanguage(); // <--- USE TRANSLATIONS
+  const { t } = useLanguage();
 
   return (
-    <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
-      <div className="absolute inset-0 bg-blueprint bg-[length:40px_40px] opacity-10 pointer-events-none"></div>
-      <div className="absolute inset-0 bg-gradient-to-r from-ujenzi-dark via-ujenzi-dark/95 to-transparent z-0"></div>
+    // KEPT DARK FOR CONTRAST
+    <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden bg-ujenzi-dark text-white">
+      
+      {/* Background Gradients */}
+      <div className="absolute inset-0 bg-gradient-to-r from-ujenzi-dark via-ujenzi-dark/95 to-ujenzi-dark/80 z-10"></div>
+      <div 
+        className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2670&auto=format&fit=crop')] bg-cover bg-center opacity-40 z-0"
+      ></div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div className="relative z-20 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         
+        {/* Left Content */}
         <motion.div 
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
+          className="pt-10 lg:pt-0"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 border border-ujenzi-accent/30 bg-ujenzi-accent/10 text-ujenzi-accent text-xs font-bold uppercase tracking-widest mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full text-ujenzi-accent text-[10px] md:text-xs font-bold uppercase tracking-widest mb-6 backdrop-blur-sm">
             <span className="w-2 h-2 bg-ujenzi-accent rounded-full animate-pulse"></span>
             {t.hero.badge}
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight mb-6">
+          {/* RESPONSIVE FONT SIZES */}
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight mb-6">
             {t.hero.titleLine1} <br />
             {t.hero.titleLine2} <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-ujenzi-accent to-yellow-200">
@@ -36,66 +45,56 @@ const Hero = () => {
             </span>
           </h1>
           
-          <p className="text-lg text-slate-400 mb-8 max-w-xl leading-relaxed pl-6 border-l-4 border-ujenzi-accent">
+          <p className="text-base sm:text-lg text-slate-300 mb-8 max-w-lg leading-relaxed">
             {t.hero.desc}
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 mb-12">
-            <a href="#contact">
-              <Button variant="primary" icon={ArrowRight}>{t.hero.cta1}</Button>
+            <a href="#contact" className="w-full sm:w-auto">
+              <Button variant="primary" icon={ArrowRight} className="w-full justify-center">{t.hero.cta1}</Button>
             </a>
-            <a href="#twende-site">
-              <Button variant="outline" icon={Play}>{t.hero.cta2}</Button>
+            <a href="/calculator" className="w-full sm:w-auto">
+              <Button variant="outline" icon={Play} className="w-full justify-center">{t.hero.cta2}</Button>
             </a>
           </div>
 
           <div className="border-t border-white/10 pt-8">
-            <p className="text-xs font-bold uppercase text-slate-500 tracking-widest mb-6">{t.hero.trusted}</p>
-            <div className="flex flex-wrap items-center gap-8">
-               <div className="group flex flex-col items-center gap-2">
-                 <img src={primesiteLogo} alt="Primesite International" className="h-12 w-auto object-contain opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" />
-               </div>
-               <div className="group flex flex-col items-center gap-2">
-                 <img src={pnyLogo} alt="PNY Company Ltd" className="h-10 w-auto object-contain opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" />
-               </div>
-               <div className="group flex flex-col items-center gap-2">
-                 <img src={siteexploreLogo} alt="Site Explore" className="h-10 w-auto object-contain opacity-50 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500" />
-               </div>
+            <p className="text-[10px] font-bold uppercase text-slate-500 tracking-widest mb-4">{t.hero.trusted}</p>
+            <div className="flex flex-wrap items-center gap-6 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+               <img src={primesiteLogo} alt="Primesite" className="h-8 w-auto" />
+               <img src={pnyLogo} alt="PNY" className="h-8 w-auto" />
+               <img src={siteexploreLogo} alt="Site Explore" className="h-8 w-auto" />
             </div>
           </div>
         </motion.div>
 
-        {/* RIGHT: Visual (Unchanged) */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative h-[600px] hidden lg:block"
-        >
-          <div className="absolute top-0 right-0 w-4/5 h-full border-2 border-white/10 p-2">
-             <div className="w-full h-full bg-ujenzi-card overflow-hidden relative">
-                <img src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=2670&auto=format&fit=crop" alt="Construction Site" className="w-full h-full object-cover opacity-60 hover:scale-110 transition-transform duration-[2s]" />
-                <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-ujenzi-dark to-transparent p-8">
-                   <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 bg-ujenzi-accent flex items-center justify-center font-bold text-ujenzi-dark text-xl">14%</div>
-                      <div>
-                        <p className="text-white font-bold">GDP Contribution</p>
-                        <p className="text-xs text-slate-400">Construction Sector in TZ</p>
-                      </div>
-                   </div>
-                </div>
+        {/* Right Visual (Hidden on Mobile for cleaner look) */}
+        <div className="hidden lg:block relative h-[600px]">
+           <div className="absolute top-10 right-0 w-full h-full bg-ujenzi-accent/10 rounded-2xl transform rotate-3"></div>
+           <div className="absolute top-0 right-10 w-full h-full border-2 border-white/10 rounded-2xl"></div>
+           <img 
+             src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=2689&auto=format&fit=crop" 
+             alt="Architectural Plan"
+             className="absolute inset-0 w-full h-full object-cover rounded-2xl shadow-2xl"
+           />
+           
+           {/* Floating Card */}
+           <motion.div 
+             animate={{ y: [0, 10, 0] }} 
+             transition={{ repeat: Infinity, duration: 5 }}
+             className="absolute bottom-10 -left-10 bg-white p-6 rounded-xl shadow-xl max-w-xs"
+           >
+             <div className="flex items-start gap-4">
+               <div className="bg-green-100 p-3 rounded-full text-green-600">
+                 <CheckCircle2 size={24} />
+               </div>
+               <div>
+                 <h4 className="font-bold text-slate-900 text-sm">Verified Experts</h4>
+                 <p className="text-xs text-slate-500 mt-1">We vet every fundi and engineer so you don't have to.</p>
+               </div>
              </div>
-          </div>
-          <motion.div animate={{ y: [0, 15, 0] }} transition={{ repeat: Infinity, duration: 4 }} className="absolute top-10 left-0 bg-ujenzi-card border border-white/10 p-6 shadow-2xl max-w-xs">
-            <div className="flex items-start gap-3">
-              <CheckCircle2 className="text-ujenzi-accent shrink-0" />
-              <div>
-                <h4 className="font-bold text-white text-sm">Verified Professionals</h4>
-                <p className="text-xs text-slate-400 mt-1">Access our directory of vetted architects and engineers.</p>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
+           </motion.div>
+        </div>
 
       </div>
     </section>

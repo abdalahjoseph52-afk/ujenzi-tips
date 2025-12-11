@@ -1,84 +1,106 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react'; 
+import React, { useState } from 'react';
+import { Menu, X, ChevronRight } from 'lucide-react'; 
 import Button from '../ui/Button';
 import { useLanguage } from '../../hooks/useLanguage';
 import logo from '../../assets/logo.png';
 
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { t, lang, toggleLanguage } = useLanguage();
 
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const navLinks = [
     { name: t.nav.home, href: "/" },
-    { name: t.nav.consultation, href: "#contact" }, 
-    { name: t.nav.team, href: "#team" }, 
-    { name: t.nav.blog, href: "#blog" } 
+    { name: t.nav.plans, href: "/plans" },
+    { name: t.nav.services, href: "/services" },
+    { name: t.nav.guide, href: "/guide" }, 
+    { name: t.nav.calc, href: "/calculator" },
+    { name: t.nav.pros, href: "/pros" },
+    { name: t.nav.resources, href: "/resources" },
+    { name: t.nav.faq, href: "/faq" }
   ];
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 border-b border-white/5 ${isScrolled ? 'bg-ujenzi-dark/95 backdrop-blur-md py-2 shadow-lg' : 'bg-transparent py-4'}`}>
-      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+    // FIXED DARK HEADER
+    <nav className="fixed top-10 left-0 w-full z-50 bg-ujenzi-dark border-b border-white/10 shadow-xl transition-all duration-300">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
         
-        {/* BRAND LOGO - MASSIVE SIZE UPDATE */}
+        {/* LOGO */}
         <div className="flex items-center">
-          <img 
-            src={logo} 
-            alt="Ujenzi Tips Logo" 
-            // CHANGED: h-20 -> h-32 (Much Bigger)
-            className="h-40 w-auto object-contain hover:scale-105 transition-transform duration-300" 
-          />
+          <a href="/" className="block">
+            <img 
+              src={logo} 
+              alt="Ujenzi Tips Logo" 
+              className="h-28 w-auto object-contain hover:scale-105 transition-transform duration-300" 
+            />
+          </a>
         </div>
 
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8">
+        {/* DESKTOP LINKS (Hidden on Mobile) */}
+        <div className="hidden 2xl:flex items-center gap-6">
           {navLinks.map((link) => (
-            <a key={link.name} href={link.href} className="text-sm font-medium text-slate-300 hover:text-ujenzi-accent uppercase tracking-wider transition-colors relative group">
+            <a 
+              key={link.name} 
+              href={link.href} 
+              className="text-[11px] font-bold text-slate-300 hover:text-ujenzi-accent uppercase tracking-widest transition-colors"
+            >
               {link.name}
-              <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-ujenzi-accent transition-all duration-300 group-hover:w-full"></span>
             </a>
           ))}
           
-          {/* LANGUAGE SWITCHER */}
+          <div className="h-4 w-[1px] bg-white/10 mx-2"></div>
+
+          {/* LANGUAGE */}
           <button 
             onClick={toggleLanguage}
-            className="flex items-center gap-1 px-3 py-1 rounded-full border border-white/10 text-xs font-bold hover:bg-white/5 transition-colors"
+            className="text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase"
           >
-            <span className={lang === 'en' ? 'text-ujenzi-accent' : 'text-slate-500'}>EN</span>
-            <span className="text-slate-500">|</span>
-            <span className={lang === 'sw' ? 'text-ujenzi-accent' : 'text-slate-500'}>SW</span>
+            {lang === 'en' ? 'Swahili' : 'English'}
           </button>
 
+          {/* CTA */}
           <a href="#contact">
-            <Button variant="outline">{t.nav.btn}</Button>
+            <Button variant="outline" className="scale-90">{t.nav.btn}</Button>
           </a>
         </div>
 
-        <button className="md:hidden text-white hover:text-ujenzi-accent transition-colors" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <X size={32} /> : <Menu size={32} />}
+        {/* MOBILE TOGGLE */}
+        <button 
+          className="2xl:hidden p-2 text-white hover:text-ujenzi-accent transition-colors" 
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          {isOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* MOBILE MENU (Clean List Layout) */}
       {isOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-ujenzi-dark border-b border-ujenzi-accent/20 p-6 flex flex-col gap-4 shadow-2xl">
-          {navLinks.map((link) => (
-            <a key={link.name} href={link.href} onClick={() => setIsOpen(false)} className="text-lg font-bold text-white py-3 border-b border-white/5 hover:text-ujenzi-accent hover:pl-2 transition-all">
-              {link.name}
-            </a>
-          ))}
-          <button onClick={toggleLanguage} className="text-left text-slate-400 font-bold">
-            Change Language: <span className="text-ujenzi-accent">{lang === 'en' ? 'Swahili' : 'English'}</span>
-          </button>
-          <a href="#contact" onClick={() => setIsOpen(false)}>
-            <Button variant="primary" className="w-full mt-4">{t.nav.btn}</Button>
-          </a>
+        <div className="2xl:hidden absolute top-full left-0 w-full bg-ujenzi-dark border-t border-white/10 shadow-2xl overflow-y-auto max-h-[85vh]">
+          <div className="flex flex-col p-6 space-y-2">
+            {navLinks.map((link) => (
+              <a 
+                key={link.name} 
+                href={link.href} 
+                onClick={() => setIsOpen(false)} 
+                className="flex justify-between items-center text-sm font-bold text-slate-300 py-3 border-b border-white/5 hover:text-ujenzi-accent hover:pl-2 transition-all"
+              >
+                {link.name}
+                <ChevronRight size={16} className="opacity-50" />
+              </a>
+            ))}
+            
+            <div className="pt-6 flex flex-col gap-4">
+              <button 
+                onClick={toggleLanguage} 
+                className="text-left text-sm font-bold text-slate-400 uppercase tracking-widest"
+              >
+                Change Language: <span className="text-white">{lang === 'en' ? 'Swahili' : 'English'}</span>
+              </button>
+              
+              <a href="#contact" onClick={() => setIsOpen(false)}>
+                <Button variant="primary" className="w-full justify-center">{t.nav.btn}</Button>
+              </a>
+            </div>
+          </div>
         </div>
       )}
     </nav>
