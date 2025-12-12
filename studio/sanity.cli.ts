@@ -5,11 +5,12 @@ export default defineCliConfig({
     projectId: '2e51pi9t',
     dataset: 'production'
   },
+  
+  // studioHost inakaa HAPA (Nje ya deployment)
+  studioHost: 'ujenzi-tips-admin',
+
   deployment: {
-    /**
-     * Enable auto-updates for studios.
-     * Learn more at https://www.sanity.io/docs/cli#auto-updates
-     */
     autoUpdates: true,
+    appId: 'wkpcuhwd5sjgstnokr4vac4s'
   }
 })
