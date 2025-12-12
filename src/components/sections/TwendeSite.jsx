@@ -4,25 +4,36 @@ import { Play, MapPin } from 'lucide-react';
 import Button from '../ui/Button';
 import VideoModal from '../ui/VideoModal';
 import { useLanguage } from '../../hooks/useLanguage';
-import { client } from '../../lib/sanity'; // <--- Connect to Sanity
+import { client } from '../../lib/sanity';
 
 const TwendeSite = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videos, setVideos] = useState([]);
   const { t } = useLanguage();
 
-  // Fetch Videos
   useEffect(() => {
-    client.fetch(`*[_type == "videoPost"]`)
-      .then(setVideos)
+    // Fetch latest videos
+    const query = `*[_type == "videoPost"] | order(_createdAt desc)`;
+    client.fetch(query)
+      .then((data) => {
+        console.log("Video Data:", data);
+        setVideos(data);
+      })
       .catch(console.error);
   }, []);
 
   const getThumbnail = (id) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 
-  // Fallback if no videos exist yet
-  const featuredVideo = videos[0] || { youtubeId: 'npnSan2ckYY', title: 'Loading...', location: '...' };
-  const listVideos = videos.slice(1, 4); // Take next 3 videos
+  // Fallback Data (Demo) if Sanity is empty
+  const demoVideo = { 
+    youtubeId: 'npnSan2ckYY', 
+    title: 'Site Visit: Goba Foundation', 
+    location: 'Goba, Dar es Salaam',
+    category: 'Inspection'
+  };
+
+  const featuredVideo = videos.length > 0 ? videos[0] : demoVideo;
+  const listVideos = videos.length > 0 ? videos.slice(1, 4) : [demoVideo, demoVideo, demoVideo];
 
   return (
     <>
@@ -48,7 +59,7 @@ const TwendeSite = () => {
             </a>
           </div>
 
-          {/* Featured Video (First item from Sanity) */}
+          {/* Featured Video */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -73,11 +84,11 @@ const TwendeSite = () => {
             </div>
           </motion.div>
 
-          {/* List Videos (Next 3 items) */}
+          {/* List Videos */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
-            {listVideos.map((video) => (
+            {listVideos.map((video, index) => (
               <motion.div
-                key={video._id}
+                key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 onClick={() => setSelectedVideo(video.youtubeId)} 
@@ -87,9 +98,6 @@ const TwendeSite = () => {
                   <img src={getThumbnail(video.youtubeId)} alt={video.title} className="w-full h-full object-cover" />
                 </div>
                 <div className="p-3 lg:p-4 flex flex-col justify-center w-full">
-                  <div className="absolute top-2 left-2 hidden sm:block bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white uppercase z-10">
-                    {video.category}
-                  </div>
                   <h4 className="text-sm lg:text-lg font-bold text-slate-900 mb-1 line-clamp-2 leading-tight group-hover:text-ujenzi-accent">
                     {video.title}
                   </h4>
