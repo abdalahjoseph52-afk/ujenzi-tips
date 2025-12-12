@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Quote } from 'lucide-react';
 import { useLanguage } from '../../hooks/useLanguage';
+import { client } from '../../lib/sanity'; // <--- Connect to Sanity
 
 const Testimonials = () => {
   const { t } = useLanguage();
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    client.fetch(`*[_type == "testimonial"]`)
+      .then(setReviews)
+      .catch(console.error);
+  }, []);
 
   return (
     <section className="py-12 lg:py-24 bg-slate-50 border-t border-slate-200">
@@ -19,9 +27,9 @@ const Testimonials = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-8">
-          {t.testimonials.list.map((item, index) => (
+          {reviews.map((item) => (
             <div 
-              key={index} 
+              key={item._id} 
               className="bg-white border border-slate-100 p-6 lg:p-8 rounded-xl relative group shadow-sm hover:shadow-md transition-all"
             >
               <div className="absolute top-4 right-4 text-slate-100 group-hover:text-ujenzi-accent/10 transition-colors">
@@ -41,7 +49,7 @@ const Testimonials = () => {
 
               <div className="flex items-center gap-3 pt-4 border-t border-slate-50">
                 <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-600 text-[10px]">
-                  {item.name.charAt(0)}
+                  {item.name ? item.name.charAt(0) : 'U'}
                 </div>
                 <div>
                   <h4 className="text-slate-900 font-bold text-xs">{item.name}</h4>

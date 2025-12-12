@@ -1,23 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Play, MapPin, Clock } from 'lucide-react';
+import { Play, MapPin } from 'lucide-react';
 import Button from '../ui/Button';
 import VideoModal from '../ui/VideoModal';
 import { useLanguage } from '../../hooks/useLanguage';
+import { client } from '../../lib/sanity'; // <--- Connect to Sanity
 
 const TwendeSite = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videos, setVideos] = useState([]);
   const { t } = useLanguage();
 
-  const videoIds = ["npnSan2ckYY", "ZRU_iTxXeOs", "OlSK2iaVAVM"];
+  // Fetch Videos
+  useEffect(() => {
+    client.fetch(`*[_type == "videoPost"]`)
+      .then(setVideos)
+      .catch(console.error);
+  }, []);
+
   const getThumbnail = (id) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
-  const durations = ["14:10", "08:20", "12:15"];
+
+  // Fallback if no videos exist yet
+  const featuredVideo = videos[0] || { youtubeId: 'npnSan2ckYY', title: 'Loading...', location: '...' };
+  const listVideos = videos.slice(1, 4); // Take next 3 videos
 
   return (
     <>
-      {/* LIGHT THEME FOR TWENDE SITE */}
       <section id="twende-site" className="py-12 lg:py-24 bg-slate-50 relative overflow-hidden">
-        
         <div className="max-w-7xl mx-auto px-5 lg:px-6 relative z-10">
           
           <div className="flex flex-col md:flex-row justify-between items-end mb-10 lg:mb-16 gap-6">
@@ -34,21 +43,21 @@ const TwendeSite = () => {
               </h2>
             </div>
             
-            <a href="https://youtube.com/@ujenzitips?si=FbPZUHIjSKFogwc6" target="_blank" rel="noreferrer" className="w-full sm:w-auto">
+            <a href="https://youtube.com/@ujenzitips" target="_blank" rel="noreferrer" className="w-full sm:w-auto">
               <Button variant="outline" icon={Play} className="w-full justify-center text-sm py-3 border-slate-300 text-slate-700 hover:bg-white">{t.twende.btn}</Button>
             </a>
           </div>
 
-          {/* Featured Video */}
+          {/* Featured Video (First item from Sanity) */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            onClick={() => setSelectedVideo("npnSan2ckYY")} 
+            onClick={() => setSelectedVideo(featuredVideo.youtubeId)} 
             className="relative w-full aspect-video lg:h-[500px] rounded-xl lg:rounded-2xl overflow-hidden shadow-lg border border-white mb-8 lg:mb-12 group cursor-pointer"
           >
             <img 
-              src={getThumbnail("npnSan2ckYY")} 
-              alt="Featured Site Visit" 
+              src={getThumbnail(featuredVideo.youtubeId)} 
+              alt="Featured" 
               className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-all duration-700"
             />
             <div className="absolute inset-0 flex items-center justify-center">
@@ -57,27 +66,30 @@ const TwendeSite = () => {
               </div>
             </div>
             <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-6 lg:p-12">
-              <h3 className="text-xl lg:text-4xl font-bold text-white mb-2">{t.twende.heroTitle}</h3>
+              <h3 className="text-xl lg:text-4xl font-bold text-white mb-2">{featuredVideo.title}</h3>
               <div className="flex items-center gap-4 lg:gap-6 text-slate-200 text-xs lg:text-sm font-medium">
-                <span className="flex items-center gap-1"><MapPin size={14} className="text-ujenzi-accent"/> {t.twende.location}</span>
+                <span className="flex items-center gap-1"><MapPin size={14} className="text-ujenzi-accent"/> {featuredVideo.location}</span>
               </div>
             </div>
           </motion.div>
 
+          {/* List Videos (Next 3 items) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8">
-            {t.twende.list.map((video, index) => (
+            {listVideos.map((video) => (
               <motion.div
-                key={index}
+                key={video._id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                onClick={() => setSelectedVideo(videoIds[index])} 
+                onClick={() => setSelectedVideo(video.youtubeId)} 
                 className="group bg-white border border-slate-100 rounded-xl overflow-hidden flex flex-row sm:flex-col h-24 sm:h-auto cursor-pointer hover:shadow-lg transition-all"
               >
                 <div className="relative w-32 sm:w-full sm:h-48 overflow-hidden shrink-0">
-                  <img src={getThumbnail(videoIds[index])} alt={video.title} className="w-full h-full object-cover" />
+                  <img src={getThumbnail(video.youtubeId)} alt={video.title} className="w-full h-full object-cover" />
                 </div>
                 <div className="p-3 lg:p-4 flex flex-col justify-center w-full">
+                  <div className="absolute top-2 left-2 hidden sm:block bg-black/60 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-white uppercase z-10">
+                    {video.category}
+                  </div>
                   <h4 className="text-sm lg:text-lg font-bold text-slate-900 mb-1 line-clamp-2 leading-tight group-hover:text-ujenzi-accent">
                     {video.title}
                   </h4>
