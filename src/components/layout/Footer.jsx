@@ -1,6 +1,5 @@
 import React from 'react';
-import { Instagram, Youtube, Facebook, Mail, Phone, MapPin } from 'lucide-react';
-import Button from '../ui/Button';
+import { Facebook, Twitter, Instagram, Linkedin, Send } from 'lucide-react';
 import { useLanguage } from '../../hooks/useLanguage';
 import logo from '../../assets/logo.png';
 
@@ -8,87 +7,105 @@ const Footer = () => {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-ujenzi-dark pt-24 pb-12 relative overflow-hidden border-t-4 border-ujenzi-accent">
+    <footer className="bg-white border-t border-slate-200 pt-16 pb-8 text-slate-600">
       <div className="max-w-7xl mx-auto px-6">
+        
+        {/* Top Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           
-          {/* Brand */}
-          <div className="space-y-6">
-            <img src={logo} alt="Ujenzi Tips" className="h-24 w-auto object-contain" />
-            <p className="text-slate-400 text-sm leading-relaxed">{t.footer.desc}</p>
-            <div className="flex gap-3">
-              <SocialIcon Icon={Instagram} link="https://www.instagram.com/ujenzitips_?igsh=MWljeHU5eGN0OHg3cA==" />
-              <SocialIcon Icon={Youtube} link="https://youtube.com/@ujenzitips?si=FbPZUHIjSKFogwc6" />
-              <SocialIcon Icon={Facebook} link="https://www.facebook.com/share/19kSKF1fae/" />
+          {/* Brand Info */}
+          <div>
+            <img src={logo} alt="Ujenzi Tips" className="h-16 w-auto mb-6 opacity-90" />
+            <p className="text-sm leading-relaxed mb-6 text-slate-500">
+              {t.footer.desc}
+            </p>
+            <div className="flex gap-4">
+              {[Instagram, Twitter, Facebook, Linkedin].map((Icon, i) => (
+                <a key={i} href="#" className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-ujenzi-accent hover:text-white transition-all">
+                  <Icon size={16} />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Links */}
+          {/* Quick Links */}
           <div>
-            <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-6">{t.footer.explore}</h4>
-            <ul className="space-y-3 text-sm text-slate-400">
-              <li><a href="/" className="hover:text-ujenzi-accent transition-colors block py-1">{t.nav.home}</a></li>
-              <li><a href="/plans" className="hover:text-ujenzi-accent transition-colors block py-1">{t.nav.plans}</a></li>
-              <li><a href="/calculator" className="hover:text-ujenzi-accent transition-colors block py-1">{t.nav.calc}</a></li>
-              <li><a href="/pros" className="hover:text-ujenzi-accent transition-colors block py-1">{t.nav.pros}</a></li>
-              <li><a href="/faq" className="hover:text-ujenzi-accent transition-colors block py-1">{t.nav.faq}</a></li>
+            <h4 className="text-slate-900 font-bold uppercase tracking-widest text-xs mb-6 border-l-4 border-ujenzi-accent pl-3">
+              {t.footer.explore}
+            </h4>
+            <ul className="space-y-3 text-sm">
+              <li><a href="/plans" className="hover:text-ujenzi-accent transition-colors flex items-center gap-2">House Plans</a></li>
+              <li><a href="/calculator" className="hover:text-ujenzi-accent transition-colors flex items-center gap-2">Material Calculator</a></li>
+              <li><a href="/pros" className="hover:text-ujenzi-accent transition-colors flex items-center gap-2">Verified Pros</a></li>
+              <li><a href="/order" className="hover:text-ujenzi-accent transition-colors flex items-center gap-2">Order Materials</a></li>
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Contact Info */}
           <div>
-            <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-6">{t.footer.contact}</h4>
-            <ul className="space-y-4 text-sm text-slate-400">
-              <li className="flex gap-3">
-                <MapPin size={18} className="text-ujenzi-accent shrink-0" />
-                <span>{t.contact.locText}</span>
+            <h4 className="text-slate-900 font-bold uppercase tracking-widest text-xs mb-6 border-l-4 border-ujenzi-accent pl-3">
+              {t.footer.contact}
+            </h4>
+            <ul className="space-y-3 text-sm">
+              <li className="flex flex-col">
+                <span className="text-xs font-bold text-slate-400 uppercase">Location:</span>
+                <span>Mbezi Beach, Dar es Salaam</span>
               </li>
-              <li className="flex gap-3">
-                <Phone size={18} className="text-ujenzi-accent shrink-0" />
-                <span className="font-mono">+255 764 533 533</span>
+              <li className="flex flex-col">
+                <span className="text-xs font-bold text-slate-400 uppercase">Phone:</span>
+                <span>+255 764 533 533</span>
               </li>
-              <li className="flex gap-3">
-                <Mail size={18} className="text-ujenzi-accent shrink-0" />
-                <span>ujenzitips@gmail.com</span>
+              <li className="flex flex-col">
+                <span className="text-xs font-bold text-slate-400 uppercase">Email:</span>
+                <span>info@ujenzitips.com</span>
               </li>
             </ul>
           </div>
 
           {/* Newsletter */}
           <div>
-            <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-6">{t.footer.newsletter}</h4>
-            <p className="text-slate-400 text-xs mb-4">{t.footer.newsDesc}</p>
-            <form action="https://formsubmit.co/ujenzitips@gmail.com" method="POST" className="flex flex-col gap-2">
-              <input type="hidden" name="_subject" value="New Newsletter Subscriber!" />
+            <h4 className="text-slate-900 font-bold uppercase tracking-widest text-xs mb-6 border-l-4 border-ujenzi-accent pl-3">
+              {t.footer.newsletter}
+            </h4>
+            <p className="text-xs mb-4 text-slate-500">{t.footer.newsDesc}</p>
+            <div className="flex gap-2">
               <input 
                 type="email" 
-                name="email"
-                placeholder="name@email.com" 
-                required
-                className="bg-white/5 border border-white/10 px-4 py-3 text-white text-sm focus:border-ujenzi-accent focus:outline-none rounded-sm w-full"
+                placeholder="Email Address" 
+                className="bg-slate-50 border border-slate-200 text-slate-900 text-xs px-4 py-3 rounded-lg w-full focus:outline-none focus:border-ujenzi-accent"
               />
-              <Button variant="primary" className="w-full justify-center">{t.footer.sub}</Button>
-            </form>
+              <button className="bg-slate-900 text-white px-4 rounded-lg hover:bg-ujenzi-accent hover:text-slate-900 transition-colors">
+                <Send size={16} />
+              </button>
+            </div>
           </div>
-
         </div>
 
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
-          <p>&copy; 2025 Ujenzi Tips. {t.footer.rights}</p>
-          <div className="flex gap-6">
-            <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
-            <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
+        {/* Bottom Bar */}
+        <div className="border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-slate-400 font-medium">
+            &copy; {new Date().getFullYear()} Ujenzi Tips. {t.footer.rights}
+          </p>
+          
+          <div className="flex items-center gap-6 text-xs font-bold text-slate-400 uppercase tracking-wider">
+            <a href="/terms" className="hover:text-ujenzi-accent">Privacy Policy</a>
+            <a href="/terms" className="hover:text-ujenzi-accent">Terms of Service</a>
+            
+            {/* LINK YA SIRI (SECRET ADMIN DOT) */}
+            <a 
+              href="https://ujenzi-tips-admin.sanity.studio/" 
+              target="_blank" 
+              rel="noreferrer"
+              title="Staff Access"
+              className="w-2 h-2 rounded-full bg-slate-200 hover:bg-ujenzi-accent hover:scale-150 transition-all cursor-pointer"
+            >
+            </a>
+
           </div>
         </div>
       </div>
     </footer>
   );
 };
-
-const SocialIcon = ({ Icon, link }) => (
-  <a href={link} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:bg-ujenzi-accent hover:text-ujenzi-dark transition-all duration-300">
-    <Icon size={18} />
-  </a>
-);
 
 export default Footer;
