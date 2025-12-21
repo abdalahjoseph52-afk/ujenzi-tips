@@ -1,153 +1,141 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react'; 
-import Button from '../ui/Button';
-import { useLanguage } from '../../hooks/useLanguage';
+import { Link, useLocation } from 'react-router-dom';
+import { 
+  Menu, X, ChevronDown, 
+  Calculator, FileText, ShoppingCart, Ruler, 
+  Building2, MapPin, 
+  BookOpen, HardHat, GraduationCap 
+} from 'lucide-react';
 import logo from '../../assets/logo.png';
 
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { t, lang, toggleLanguage } = useLanguage();
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // --- LINKS ---
-  const mainLinks = [
-    { name: t.nav.home, href: "/" },
-    { name: t.nav.plans, href: "/plans" },
-    { name: t.nav.order, href: "/order" },
-    { name: t.nav.pros, href: "/pros" },
-    { name: t.nav.services, href: "/services" },
-  ];
+  const menuItems = {
+    tools: [
+      { name: 'Kikokotozi (Calculator)', path: '/calculator', icon: Calculator },
+      { name: 'QR Card Maker', path: '/?tool=qr', icon: FileText },
+      { name: 'Bajeti Planner', path: '/budget', icon: ShoppingCart },
+      { name: 'Converter (Vipimo)', path: '/converter', icon: Ruler },
+    ],
+    market: [
+      { name: 'Ramani za Nyumba', path: '/plans', icon: Building2 },
+      { name: 'Tafuta Fundi (Map)', path: '/locations', icon: MapPin },
+      { name: 'Bei za Vifaa', path: '/market-prices', icon: ShoppingCart },
+    ],
+    resources: [
+      { name: 'Maktaba (Downloads)', path: '/resources', icon: BookOpen },
+      { name: 'Mwongozo wa Ujenzi', path: '/guide', icon: HardHat },
+      { name: 'Ujenzi Blog', path: '/#blog', icon: GraduationCap },
+    ]
+  };
 
-  const toolLinks = [
-    { name: t.nav.calc, href: "/calculator" },
-    { name: t.nav.budget, href: "/budget" },
-    { name: t.nav.convert, href: "/converter" },
-  ];
-
-  const resourceLinks = [
-    { name: t.nav.guide, href: "/guide" },
-    { name: t.nav.resources, href: "/resources" },
-    { name: t.nav.faq, href: "/faq" },
-  ];
-
-  const MobileLink = ({ href, children }) => (
-    <a 
-      href={href} 
-      onClick={() => setIsOpen(false)} 
-      className="flex justify-between items-center text-sm font-bold text-slate-300 py-4 border-b border-white/5 hover:text-ujenzi-accent hover:pl-2 transition-all"
+  const DesktopDropdown = ({ title, items, id }) => (
+    <div 
+      className="relative group"
+      onMouseEnter={() => setActiveDropdown(id)}
+      onMouseLeave={() => setActiveDropdown(null)}
     >
-      {children}
-      <ChevronRight size={16} className="opacity-50" />
-    </a>
+      <button className="flex items-center gap-1 text-sm font-bold uppercase tracking-wider text-slate-300 hover:text-ujenzi-accent py-6 transition-colors">
+        {title} <ChevronDown size={14} className={`transition-transform duration-300 ${activeDropdown === id ? 'rotate-180' : ''}`} />
+      </button>
+      
+      <div className={`absolute top-full left-0 w-64 bg-white shadow-2xl rounded-b-xl overflow-hidden transition-all duration-300 transform origin-top ${activeDropdown === id ? 'opacity-100 scale-y-100 visible' : 'opacity-0 scale-y-95 invisible'}`}>
+        <div className="py-2">
+          {items.map((item, index) => (
+            <Link 
+              key={index} 
+              to={item.path}
+              className="flex items-center gap-3 px-6 py-3 hover:bg-slate-50 group/item transition-colors border-b border-slate-50 last:border-0"
+            >
+              <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center group-hover/item:bg-ujenzi-accent group-hover/item:text-ujenzi-dark transition-colors">
+                <item.icon size={16} strokeWidth={2} />
+              </div>
+              <div>
+                <span className="block text-sm font-bold text-slate-800 group-hover/item:text-ujenzi-dark">{item.name}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 
   return (
-    // DARK GRADIENT BACKGROUND FOR NAVBAR (Matches Brand)
-    <nav className={`fixed top-10 left-0 w-full z-50 transition-all duration-300 border-b border-white/10 ${isScrolled ? 'bg-ujenzi-dark/95 backdrop-blur-md py-2 shadow-lg' : 'bg-gradient-to-r from-ujenzi-dark to-slate-900 py-4'}`}>
-      <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+    <nav className={`w-full transition-all duration-300 border-b border-white/10 ${scrolled ? 'bg-ujenzi-dark/95 backdrop-blur-md shadow-lg py-1' : 'bg-gradient-to-r from-ujenzi-dark to-slate-900 py-2'}`}>
+      {/* 🔥 REKEBISHO HAPA: 
+         Nimebadilisha 'max-w-7xl' kuwa 'max-w-[1600px]'. 
+         Hii inaruhusu navbar itanuke zaidi kwenye screen kubwa.
+         Pia nimeongeza padding 'px-4 md:px-8' ili isiguse kingo za screen.
+      */}
+      <div className="w-full max-w-[1600px] mx-auto px-4 md:px-8 lg:px-10 flex justify-between items-center relative">
         
-        {/* LOGO (Now visible on dark background) */}
-        <div className="flex items-center">
-          <a href="/">
-            <img 
-              src={logo} 
-              alt="Ujenzi Tips Logo" 
-              className="h-24 md:h-28 w-auto object-contain hover:scale-105 transition-transform duration-300" 
-            />
-          </a>
+        <Link to="/" className="flex-shrink-0">
+          <img 
+            src={logo} 
+            alt="Ujenzi Tips" 
+            className="h-24 md:h-32 lg:h-40 w-auto object-contain hover:scale-105 transition-transform drop-shadow-lg relative z-50" 
+          />
+        </Link>
+
+        <div className="hidden lg:flex items-center gap-8 xl:gap-12"> {/* Gap kubwa zaidi */}
+          <Link to="/" className="text-sm font-bold uppercase tracking-wider text-slate-300 hover:text-ujenzi-accent transition-colors">Nyumbani</Link>
+          <DesktopDropdown title="Vifaa & Tools" items={menuItems.tools} id="tools" />
+          <DesktopDropdown title="Soko & Ramani" items={menuItems.market} id="market" />
+          <DesktopDropdown title="Elimu" items={menuItems.resources} id="resources" />
+          <Link to="/services" className="text-sm font-bold uppercase tracking-wider text-slate-300 hover:text-ujenzi-accent transition-colors">Huduma</Link>
         </div>
 
-        {/* DESKTOP MENU (Light Text for Dark Background) */}
-        <div className="hidden xl:flex items-center gap-6">
-          
-          {mainLinks.map((link) => (
-            <a key={link.name} href={link.href} className="text-xs font-bold text-slate-300 hover:text-ujenzi-accent uppercase tracking-widest transition-colors relative group">
-              {link.name}
-              <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-ujenzi-accent transition-all duration-300 group-hover:w-full"></span>
-            </a>
-          ))}
-
-          {/* Tools Dropdown */}
-          <div className="relative group">
-            <button className="flex items-center gap-1 text-xs font-bold text-slate-300 hover:text-ujenzi-accent uppercase tracking-widest transition-colors py-4">
-              Tools <ChevronDown size={14} />
-            </button>
-            {/* White Dropdown for contrast */}
-            <div className="absolute top-full left-0 w-48 bg-white text-slate-900 border border-slate-200 shadow-xl rounded-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-              {toolLinks.map((link) => (
-                <a key={link.name} href={link.href} className="block px-6 py-3 text-xs font-bold hover:bg-slate-50 hover:text-ujenzi-accent border-b border-slate-100 last:border-0 uppercase tracking-wide">
-                  {link.name}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Resources Dropdown */}
-          <div className="relative group">
-            <button className="flex items-center gap-1 text-xs font-bold text-slate-300 hover:text-ujenzi-accent uppercase tracking-widest transition-colors py-4">
-              Resources <ChevronDown size={14} />
-            </button>
-            <div className="absolute top-full left-0 w-48 bg-white text-slate-900 border border-slate-200 shadow-xl rounded-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-              {resourceLinks.map((link) => (
-                <a key={link.name} href={link.href} className="block px-6 py-3 text-xs font-bold hover:bg-slate-50 hover:text-ujenzi-accent border-b border-slate-100 last:border-0 uppercase tracking-wide">
-                  {link.name}
-                </a>
-              ))}
-            </div>
-          </div>
-
-          <div className="h-4 w-[1px] bg-white/10 mx-2"></div>
-
-          <button 
-            onClick={toggleLanguage}
-            className="flex items-center gap-1 px-3 py-1 rounded-full border border-white/20 text-[10px] font-bold hover:bg-white/10 transition-colors text-white"
-          >
-            {lang === 'en' ? 'EN' : 'SW'}
-          </button>
-
-          <a href="#contact">
-            <Button variant="outline" className="scale-90 border-white text-white hover:bg-white hover:text-ujenzi-dark">{t.nav.btn}</Button>
+        <div className="hidden lg:flex items-center gap-4">
+          <a href="https://wa.me/255XXXXXXXXX" target="_blank" rel="noreferrer" className="hidden xl:flex flex-col items-end text-right mr-2">
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Wasiliana Nasi</span>
+            <span className="text-white font-bold text-sm tracking-wide hover:text-green-400 transition-colors">+255 700 000 000</span>
           </a>
+          <Link to="/calculator">
+             <button className="bg-ujenzi-accent text-ujenzi-dark px-6 py-2.5 rounded-full font-bold text-sm hover:bg-white hover:scale-105 transition-all shadow-[0_0_15px_rgba(255,215,0,0.3)]">
+               Kadiria Vifaa
+             </button>
+          </Link>
         </div>
 
-        {/* MOBILE TOGGLE (White Icon) */}
-        <button className="xl:hidden text-white hover:text-ujenzi-accent transition-colors" onClick={() => setIsOpen(!isOpen)}>
+        <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden text-white hover:text-ujenzi-accent transition-colors p-2">
           {isOpen ? <X size={32} /> : <Menu size={32} />}
         </button>
       </div>
 
-      {/* MOBILE MENU (Dark Background to match Header) */}
       {isOpen && (
-        <div className="xl:hidden absolute top-full left-0 w-full bg-ujenzi-dark border-t border-white/10 shadow-2xl h-[85vh] overflow-y-auto">
-          <div className="p-6 flex flex-col">
-            
-            <div className="text-ujenzi-accent text-[10px] font-bold uppercase tracking-widest mb-2 mt-2 opacity-60">Menu</div>
-            {mainLinks.map(link => <MobileLink key={link.name} href={link.href}>{link.name}</MobileLink>)}
-            
-            <div className="text-ujenzi-accent text-[10px] font-bold uppercase tracking-widest mb-2 mt-8 opacity-60">Tools</div>
-            {toolLinks.map(link => <MobileLink key={link.name} href={link.href}>{link.name}</MobileLink>)}
-
-            <div className="text-ujenzi-accent text-[10px] font-bold uppercase tracking-widest mb-2 mt-8 opacity-60">Knowledge Base</div>
-            {resourceLinks.map(link => <MobileLink key={link.name} href={link.href}>{link.name}</MobileLink>)}
-            
-            <div className="text-ujenzi-accent text-[10px] font-bold uppercase tracking-widest mb-2 mt-8 opacity-60">Extras</div>
-            <MobileLink href="/#blog">{t.nav.blog}</MobileLink>
-
-            <div className="mt-8 pt-8 border-t border-white/10 flex flex-col gap-4">
-              <button onClick={toggleLanguage} className="text-left text-sm font-bold text-slate-400 uppercase tracking-widest">
-                Change Language: <span className="text-white">{lang === 'en' ? 'Swahili' : 'English'}</span>
-              </button>
-              <a href="#contact" onClick={() => setIsOpen(false)}>
-                <Button variant="primary" className="w-full justify-center">{t.nav.btn}</Button>
-              </a>
+        <div className="lg:hidden fixed inset-0 top-[140px] bg-ujenzi-dark z-40 overflow-y-auto pb-20 animate-in slide-in-from-right duration-200 border-t border-white/10">
+          <div className="p-6 flex flex-col gap-8">
+            {[
+              { title: 'Vifaa & Tools', items: menuItems.tools },
+              { title: 'Soko & Ramani', items: menuItems.market },
+              { title: 'Elimu & Maktaba', items: menuItems.resources }
+            ].map((section, idx) => (
+              <div key={idx}>
+                <h3 className="text-ujenzi-accent text-xs font-bold uppercase tracking-widest mb-4 opacity-70 border-b border-white/10 pb-2">{section.title}</h3>
+                <div className="grid grid-cols-1 gap-2">
+                  {section.items.map((item, i) => (
+                    <Link key={i} to={item.path} onClick={() => setIsOpen(false)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/5 transition-colors text-slate-200">
+                      <item.icon size={18} className="text-ujenzi-accent" />
+                      <span className="font-bold text-sm">{item.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <div className="mt-4 pt-6 border-t border-white/10">
+               <Link to="/calculator" onClick={() => setIsOpen(false)}>
+                 <button className="w-full bg-ujenzi-accent text-ujenzi-dark py-4 rounded-xl font-bold text-lg mb-4">Kadiria Vifaa Sasa</button>
+               </Link>
             </div>
-
           </div>
         </div>
       )}

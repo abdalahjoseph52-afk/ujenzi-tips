@@ -1,14 +1,15 @@
 import { createClient } from '@sanity/client';
-import imageUrlBuilder from '@sanity/image-url';
+import createImageUrlBuilder from '@sanity/image-url'; // <--- BADILISHA HAPA
 
 export const client = createClient({
-  projectId: '2e51pi9t', 
+  projectId: '2e51pi9t',
   dataset: 'production',
-  useCdn: false, // <--- NIMEBADILISHA HAPA: False inaleta data mpya haraka zaidi
+  useCdn: false, 
   apiVersion: '2023-05-03', 
 });
 
-const builder = imageUrlBuilder(client);
+// Tumia 'createImageUrlBuilder' badala ya ile ya zamani
+const builder = createImageUrlBuilder(client);
 
 export function urlFor(source) {
   return builder.image(source);

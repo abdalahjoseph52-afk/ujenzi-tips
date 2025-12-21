@@ -16,7 +16,6 @@ const TwendeSite = () => {
     const query = `*[_type == "videoPost"] | order(_createdAt desc)`;
     client.fetch(query)
       .then((data) => {
-        console.log("Video Data:", data);
         setVideos(data);
       })
       .catch(console.error);
@@ -40,7 +39,8 @@ const TwendeSite = () => {
       <section id="twende-site" className="py-12 lg:py-24 bg-slate-50 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-5 lg:px-6 relative z-10">
           
-          <div className="flex flex-col md:flex-row justify-between items-end mb-10 lg:mb-16 gap-6">
+          {/* HAPA: Nimebadilisha 'items-end' kuwa 'items-start' ili ikae kushoto */}
+          <div className="flex flex-col md:flex-row justify-between items-start mb-10 lg:mb-16 gap-6">
             <div className="max-w-2xl">
               <div className="flex items-center gap-2 text-ujenzi-accent font-bold uppercase tracking-[0.2em] text-[10px] mb-3">
                 <span className="w-2 h-2 bg-red-600 rounded-full animate-pulse"></span>
